@@ -2,12 +2,12 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', 
             '-t', '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}', 
-            '-t', '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_API_NAME}:latest',
+            '-t', '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_IMAGE_NAME}:latest',
             '--file', './images/${_IMAGE_NAME}/Dockerfile', './images/${_IMAGE_NAME}/'
     ]
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_API_NAME}', '--all-tags']
+    args: ['push', '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_IMAGE_NAME}', '--all-tags']
 images:
-  - '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_API_NAME}:${COMMIT_SHA}'
+  - '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}'
 options:
   logging: CLOUD_LOGGING_ONLY
