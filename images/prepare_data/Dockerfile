@@ -8,5 +8,10 @@ RUN python3.11 -m pip install --upgrade pip setuptools wheel
 RUN python3.11 -m pip install --no-cache-dir \
         google-cloud-bigquery==3.26.0 \
         google-cloud-storage==2.18.2 \
+        db-dtypes==1.3.0 \
         pandas==2.2.3 \
         scikit-learn==1.5.2
+
+
+# Copy the script to the image
+COPY gcloud_credentials.json /tmp/keys/cred_key.json

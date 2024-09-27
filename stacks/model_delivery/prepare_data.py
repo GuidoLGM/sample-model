@@ -1,19 +1,20 @@
 import pickle as pkl
 import pandas as pd
-from google.cloud import biquery
+from google.cloud import bigquery
 from google.cloud import storage
+from google.oauth2 import service_account
 from sklearn.preprocessing import StandardScaler
 
 
-def load_data_from_biquery(
-    project_id: str, dataset_id: str, table_id: str
+def load_data_from_bigquery(
+    project_id: str, dataset_id: str, table_id: str, 
 ) -> pd.DataFrame:
     """
     Load dataset from BigQuery
     """
 
     print("Connecting to BigQuery...")
-    client = biquery.Client(project=project_id)
+    client = bigquery.Client()
     query = f"""
     SELECT *
     FROM `{project_id}.{dataset_id}.{table_id}`
@@ -92,7 +93,7 @@ def save_data_to_bigquery(
     Save dataset to BigQuery
     """
 
-    client = biquery.Client(project=project_id)
+    client = bigquery.Client(project=project_id)
     table_ref = client.dataset(dataset_id).table(table_id)
     job = client.load_table_from_dataframe(data, table_ref)
 
@@ -112,7 +113,7 @@ def main():
     OUTPUT_DATASET_ID = "titanic"
     OUTPUT_TABLE_ID = "train_data_prepared"
 
-    data = load_data_from_biquery(PROJECT_ID, DATASET_ID, TABLE_ID)
+    data = load_data_from_bigquery(PROJECT_ID, DATASET_ID, TABLE_ID)
 
     data = prepare_titanic_data(data)
 
@@ -126,4 +127,7 @@ def main():
 
 
 if __name__ == "__main__":
+    import os
+    print(os.getcwd())
+    print(os.listdir())
     main()
