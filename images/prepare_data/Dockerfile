@@ -1,11 +1,10 @@
 FROM python:3.11-slim
 
-COPY requirements.txt ./requirements.txt
 
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpq-dev
 
 RUN python3.11 -m pip install --upgrade pip setuptools wheel
-RUN python3.11 -m pip install --no-cache-dir -r requirements.txt && \
-    rm -rf /var/lib/apt/lists/* && rm -fr /root/.cache
+RUN python3.11 -m pip install --no-cache-dir \
+        google-cloud-bigquery==3.26.0 \
+        google-cloud-storage==2.18.2 \
+        pandas==2.2.3 \
+        scikit-learn==1.5.2
