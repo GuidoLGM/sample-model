@@ -23,6 +23,13 @@ name: sample-model-train-stack-files
 region: southamerica-east1
 Object versioning: on
 
+# Bucket
+
+
+name: sample-model-kubeflow-pipeline
+
+region: southamerica-east1
+Object versioning: on
 
 # setup on google cloud
 
@@ -50,3 +57,27 @@ _SERVICE_REGION: southamerica-east1
 
 
 Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
+
+
+# Workflow
+
+workflow name: simple-model-lifecycle
+
+region: southamerica-east1
+
+service account: Guido Owner
+
+call log level: errors only
+
+
+# workbench
+
+name: prepare-data-pipeline
+
+region: southamerica-east1
+
+zone: southamerica-each1-a
+
+machine type: e2-standard-2
+
+time of inactivity before shutdown: 30

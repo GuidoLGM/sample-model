@@ -1,0 +1,326 @@
+{
+  "components": {
+    "comp-fetch-big-data-table": {
+      "executorLabel": "exec-fetch-big-data-table",
+      "inputDefinitions": {
+        "parameters": {
+          "dataset_id": {
+            "parameterType": "STRING"
+          },
+          "project_id": {
+            "parameterType": "STRING"
+          },
+          "table_id": {
+            "parameterType": "STRING"
+          }
+        }
+      },
+      "outputDefinitions": {
+        "artifacts": {
+          "dataset_artifact": {
+            "artifactType": {
+              "schemaTitle": "system.Dataset",
+              "schemaVersion": "0.0.1"
+            }
+          }
+        }
+      }
+    },
+    "comp-prepare-data": {
+      "executorLabel": "exec-prepare-data",
+      "inputDefinitions": {
+        "artifacts": {
+          "input_data": {
+            "artifactType": {
+              "schemaTitle": "system.Dataset",
+              "schemaVersion": "0.0.1"
+            }
+          }
+        }
+      },
+      "outputDefinitions": {
+        "artifacts": {
+          "dataset_artifact": {
+            "artifactType": {
+              "schemaTitle": "system.Dataset",
+              "schemaVersion": "0.0.1"
+            }
+          }
+        }
+      }
+    },
+    "comp-save-big-query-table": {
+      "executorLabel": "exec-save-big-query-table",
+      "inputDefinitions": {
+        "artifacts": {
+          "input_data": {
+            "artifactType": {
+              "schemaTitle": "system.Dataset",
+              "schemaVersion": "0.0.1"
+            }
+          }
+        },
+        "parameters": {
+          "dataset_id": {
+            "parameterType": "STRING"
+          },
+          "project_id": {
+            "parameterType": "STRING"
+          },
+          "table_id": {
+            "parameterType": "STRING"
+          }
+        }
+      }
+    },
+    "comp-scale-data": {
+      "executorLabel": "exec-scale-data",
+      "inputDefinitions": {
+        "artifacts": {
+          "input_data": {
+            "artifactType": {
+              "schemaTitle": "system.Dataset",
+              "schemaVersion": "0.0.1"
+            }
+          }
+        }
+      },
+      "outputDefinitions": {
+        "artifacts": {
+          "dataset_artifact": {
+            "artifactType": {
+              "schemaTitle": "system.Dataset",
+              "schemaVersion": "0.0.1"
+            }
+          },
+          "scaler_artifact": {
+            "artifactType": {
+              "schemaTitle": "system.Artifact",
+              "schemaVersion": "0.0.1"
+            }
+          }
+        }
+      }
+    }
+  },
+  "defaultPipelineRoot": "gs://sample-model-kubeflow-pipeline/titanic-pipeline",
+  "deploymentSpec": {
+    "executors": {
+      "exec-fetch-big-data-table": {
+        "container": {
+          "args": [
+            "--executor_input",
+            "{{$}}",
+            "--function_to_execute",
+            "fetch_big_data_table"
+          ],
+          "command": [
+            "sh",
+            "-c",
+            "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip || python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'kfp==2.7.0' '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"3.9\"'  &&  python3 -m pip install --quiet --no-warn-script-location 'google-cloud-bigquery==3.26.0' 'pandas==2.2.3' 'db-dtypes==1.3.0' && \"$0\" \"$@\"\n",
+            "sh",
+            "-ec",
+            "program_path=$(mktemp -d)\n\nprintf \"%s\" \"$0\" > \"$program_path/ephemeral_component.py\"\n_KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         \"$program_path/ephemeral_component.py\"                         \"$@\"\n",
+            "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import *\n\ndef fetch_big_data_table(\n    project_id: str,\n    dataset_id: str,\n    table_id: str,\n    dataset_artifact: Output[Dataset]\n):\n\n    from google.cloud import bigquery\n\n    client = bigquery.Client(project=project_id)\n\n    query = f\"\"\"\n        SELECT *\n        FROM `{project_id}.{dataset_id}.{table_id}`\n        \"\"\"\n\n    data = client.query(query).to_dataframe()\n\n    data.to_csv(dataset_artifact.path, index=False)\n\n"
+          ],
+          "image": "python:3.11-slim"
+        }
+      },
+      "exec-prepare-data": {
+        "container": {
+          "args": [
+            "--executor_input",
+            "{{$}}",
+            "--function_to_execute",
+            "prepare_data"
+          ],
+          "command": [
+            "sh",
+            "-c",
+            "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip || python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'kfp==2.7.0' '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"3.9\"' && \"$0\" \"$@\"\n",
+            "sh",
+            "-ec",
+            "program_path=$(mktemp -d)\n\nprintf \"%s\" \"$0\" > \"$program_path/ephemeral_component.py\"\n_KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         \"$program_path/ephemeral_component.py\"                         \"$@\"\n",
+            "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import *\n\ndef prepare_data(\n    input_data: Input[Dataset],\n    dataset_artifact: Output[Dataset]\n\n):\n\n    import pandas as pd\n\n    data = pd.read_csv(input_data.path, index_col=False)\n\n    data.Age = data.Age.fillna(data.Age.mean())\n\n    data.Embarked = data.Embarked.fillna(\n        data.Embarked.mode()[0]\n    )\n\n    data.drop(columns=[\"Cabin\", \"Name\", \"Ticket\"], inplace=True)\n\n    data.Sex = data.Sex.map({\"male\": 0, \"female\": 1})\n\n    data = pd.get_dummies(\n        data, columns=[\"Embarked\"], drop_first=True\n    )\n\n    data.to_csv(dataset_artifact.path, index=False)\n\n"
+          ],
+          "image": "southamerica-east1-docker.pkg.dev/pebolas-sandbox/sample-model/prepare_data:latest"
+        }
+      },
+      "exec-save-big-query-table": {
+        "container": {
+          "args": [
+            "--executor_input",
+            "{{$}}",
+            "--function_to_execute",
+            "save_big_query_table"
+          ],
+          "command": [
+            "sh",
+            "-c",
+            "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip || python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'kfp==2.7.0' '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"3.9\"'  &&  python3 -m pip install --quiet --no-warn-script-location 'google-cloud-bigquery==3.26.0' 'pandas==2.2.3' 'db-dtypes==1.3.0' && \"$0\" \"$@\"\n",
+            "sh",
+            "-ec",
+            "program_path=$(mktemp -d)\n\nprintf \"%s\" \"$0\" > \"$program_path/ephemeral_component.py\"\n_KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         \"$program_path/ephemeral_component.py\"                         \"$@\"\n",
+            "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import *\n\ndef save_big_query_table(\n    project_id: str,\n    dataset_id: str,\n    table_id: str,\n    input_data: Input[Dataset]\n):\n    import pandas as pd\n    from google.cloud import bigquery\n\n    client = bigquery.Client(project=project_id)\n\n    data = pd.read_csv(input_data.path, index_col=False)\n\n    table_ref = client.dataset(dataset_id).table(table_id)\n\n    job = client.load_table_from_dataframe(data, table_ref)\n\n    job.result()\n\n"
+          ],
+          "image": "python:3.11-slim"
+        }
+      },
+      "exec-scale-data": {
+        "container": {
+          "args": [
+            "--executor_input",
+            "{{$}}",
+            "--function_to_execute",
+            "scale_data"
+          ],
+          "command": [
+            "sh",
+            "-c",
+            "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip || python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'kfp==2.7.0' '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"3.9\"'  &&  python3 -m pip install --quiet --no-warn-script-location 'scikit-learn==1.5.2' 'pandas==2.2.3' 'db-dtypes==1.3.0' && \"$0\" \"$@\"\n",
+            "sh",
+            "-ec",
+            "program_path=$(mktemp -d)\n\nprintf \"%s\" \"$0\" > \"$program_path/ephemeral_component.py\"\n_KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         \"$program_path/ephemeral_component.py\"                         \"$@\"\n",
+            "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import *\n\ndef scale_data(\n    input_data: Input[Dataset],\n    scaler_artifact: Output[Artifact],\n    dataset_artifact: Output[Dataset]\n):\n\n    import pickle as pkl\n    import pandas as pd\n    from sklearn.preprocessing import StandardScaler\n\n    data = pd.read_csv(input_data.path, index_col=False)\n\n    scaler = StandardScaler()\n\n    column_to_scale = [\"Age\", \"Fare\"]\n    data[column_to_scale] = scaler.fit_transform(\n            data[column_to_scale]\n        )\n\n    with open(scaler_artifact.path, \"wb\") as f:\n        pkl.dump(scaler, f)\n\n    data.to_csv(dataset_artifact.path, index=False)\n\n"
+          ],
+          "image": "python:3.11-slim"
+        }
+      }
+    }
+  },
+  "pipelineInfo": {
+    "description": "Pipeline to preprocess Titanic dataset",
+    "name": "titanic-pipeline"
+  },
+  "root": {
+    "dag": {
+      "tasks": {
+        "fetch-big-data-table": {
+          "cachingOptions": {
+            "enableCache": true
+          },
+          "componentRef": {
+            "name": "comp-fetch-big-data-table"
+          },
+          "inputs": {
+            "parameters": {
+              "dataset_id": {
+                "componentInputParameter": "dataset_id"
+              },
+              "project_id": {
+                "componentInputParameter": "project_id"
+              },
+              "table_id": {
+                "componentInputParameter": "table_id"
+              }
+            }
+          },
+          "taskInfo": {
+            "name": "fetch-big-data-table"
+          }
+        },
+        "prepare-data": {
+          "cachingOptions": {
+            "enableCache": true
+          },
+          "componentRef": {
+            "name": "comp-prepare-data"
+          },
+          "dependentTasks": [
+            "fetch-big-data-table"
+          ],
+          "inputs": {
+            "artifacts": {
+              "input_data": {
+                "taskOutputArtifact": {
+                  "outputArtifactKey": "dataset_artifact",
+                  "producerTask": "fetch-big-data-table"
+                }
+              }
+            }
+          },
+          "taskInfo": {
+            "name": "prepare-data"
+          }
+        },
+        "save-big-query-table": {
+          "cachingOptions": {
+            "enableCache": true
+          },
+          "componentRef": {
+            "name": "comp-save-big-query-table"
+          },
+          "dependentTasks": [
+            "scale-data"
+          ],
+          "inputs": {
+            "artifacts": {
+              "input_data": {
+                "taskOutputArtifact": {
+                  "outputArtifactKey": "dataset_artifact",
+                  "producerTask": "scale-data"
+                }
+              }
+            },
+            "parameters": {
+              "dataset_id": {
+                "componentInputParameter": "dataset_id"
+              },
+              "project_id": {
+                "componentInputParameter": "project_id"
+              },
+              "table_id": {
+                "componentInputParameter": "output_table_id"
+              }
+            }
+          },
+          "taskInfo": {
+            "name": "save-big-query-table"
+          }
+        },
+        "scale-data": {
+          "cachingOptions": {
+            "enableCache": true
+          },
+          "componentRef": {
+            "name": "comp-scale-data"
+          },
+          "dependentTasks": [
+            "prepare-data"
+          ],
+          "inputs": {
+            "artifacts": {
+              "input_data": {
+                "taskOutputArtifact": {
+                  "outputArtifactKey": "dataset_artifact",
+                  "producerTask": "prepare-data"
+                }
+              }
+            }
+          },
+          "taskInfo": {
+            "name": "scale-data"
+          }
+        }
+      }
+    },
+    "inputDefinitions": {
+      "parameters": {
+        "dataset_id": {
+          "parameterType": "STRING"
+        },
+        "output_table_id": {
+          "parameterType": "STRING"
+        },
+        "project_id": {
+          "parameterType": "STRING"
+        },
+        "table_id": {
+          "parameterType": "STRING"
+        }
+      }
+    }
+  },
+  "schemaVersion": "2.1.0",
+  "sdkVersion": "kfp-2.7.0"
+}
