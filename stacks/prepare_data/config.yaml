@@ -1,0 +1,16 @@
+project_id: pebolas-sandbox
+location: southamerica-east1
+
+
+pipeline:
+  name: titanic-pipeline
+  root: gs://sample-model-kubeflow-pipeline/
+  description: "Pipeline to preprocess Titanic dataset"
+  package_path: titanic_pipeline.json
+
+
+parameters:
+  porject_id: pebolas-sandbox
+  dataset_id: titanic
+  table_id: train_data
+  output_table_id: train_cleaned

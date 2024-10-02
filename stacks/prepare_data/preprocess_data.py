@@ -2,8 +2,6 @@ import pandas as pd
 import pickle as pkl
 from google.cloud import bigquery
 from sklearn.preprocessing import StandardScaler
-from kfp.dsl import Input, Output, Artifact, BigQueryTable
-from kfp import dsl
 
 
 class PerprocessData:
