@@ -14,8 +14,8 @@
         "ghcr.io/devcontainers/features/github-cli:1": {}
     },
     "containerEnv": {
-        "PYTHONPATH": "/workspaces/sample-model/stacks/${localWorkspaceFolderBasename}/scr",
-        "GOOGLE_APPLICATION_CREDENTIALS": "/workspaces/sample-model/stacks/${localWorkspaceFolderBasename}/gcloud_credentials.json"
+        "PYTHONPATH": "/workspaces/${localWorkspaceFolderBasename}/scr",
+        "GOOGLE_APPLICATION_CREDENTIALS": "/workspaces/${localWorkspaceFolderBasename}/gcloud_credentials.json"
     },
     "customizations": {
         "vscode": {
