@@ -104,7 +104,7 @@ repository: GuidoLGM-sample-model
 
 branch: ^main$
 
-incluses files filter: stacks/prepare_data/prepare_data.ipynb stacks/prepare_data/config.yaml
+incluses files filter: stacks/prepare_data/prepare_data.ipynb stacks/prepare_data/config.yaml .cloudbuild/run-kubeflow-notebook.yaml
 
 cloud ruild configuration file location: .cloudbuild/run-kubeflow-notebook.yaml
 

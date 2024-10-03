@@ -1,7 +1,7 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['pull', '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_IMAGE_NAME}:latest']
-    
+
   - name: '${_SERVICE_REGION}-docker.pkg.dev/${_SERVICE_REGION}/${_API_NAME}/${_IMAGE_NAME}:latest'
     entrypoint: bash
     args:
