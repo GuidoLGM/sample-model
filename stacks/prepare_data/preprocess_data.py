@@ -2,6 +2,7 @@ import pandas as pd
 import pickle as pkl
 from google.cloud import bigquery
 from sklearn.preprocessing import StandardScaler
+from kfp.components import Output, Artifact
 
 
 class PerprocessData:
@@ -99,11 +100,10 @@ class PerprocessData:
 
         print("Data saved successfully")
 
-    def save_scaler(self):
+    def save_scaler(self, scaler_artifact: Output[Artifact]):
         """
         Save scaler to Google Cloud Storage
         """
-        scaler_artifact = Artifact(uri=dsl.get_uri())
         with open(scaler_artifact.path, "wb") as f:
             pkl.dump(self.scaler, f)
 

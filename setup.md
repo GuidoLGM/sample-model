@@ -33,7 +33,9 @@ Object versioning: on
 
 # setup on google cloud
 
-name: update--docker-data-prepare-image
+## prepare data image
+
+name: update-docker-data-prepare-image
 
 region: southamerica-east1
 
@@ -47,8 +49,9 @@ repository: GuidoLGM-sample-model
 
 branch: ^main$
 
-incluses files filter: stacks/prepare_data/Dockerfile
+incluses files filter: images/preprocess_image/Dockerfile
 
+cloud ruild configuration file location: .cloudbuild/deploy-docker-image.yaml
 
 _API_NAME: sample-model
 _IMAGE_NAME: prepare_data
@@ -58,7 +61,32 @@ _SERVICE_REGION: southamerica-east1
 
 Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
 
+## kubeflow pipeline image
+name: update-kubeflow-pipeline-image
 
+region: southamerica-east1
+
+description: updates the docker image for running compiling kubeflow pipelines
+
+event: push to a branch
+
+source: 2nd gen
+
+repository: GuidoLGM-sample-model
+
+branch: ^main$
+
+incluses files filter: images/kubeflow_pipeline_runner/Dockerfile
+
+cloud ruild configuration file location: .cloudbuild/deploy-docker-image.yaml
+
+_API_NAME: sample-model
+_IMAGE_NAME: prepare_data
+_PROJECT_ID: pebolas-sandbox
+_SERVICE_REGION: southamerica-east1
+
+
+Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
 # Workflow
 
 workflow name: simple-model-lifecycle
