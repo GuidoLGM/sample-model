@@ -49,7 +49,7 @@ repository: GuidoLGM-sample-model
 
 branch: ^main$
 
-incluses files filter: images/preprocess_image/Dockerfile
+incluses files filter: images/preprocess_image/Dockerfile .cloudbuild/deploy-docker-image.yaml
 
 cloud ruild configuration file location: .cloudbuild/deploy-docker-image.yaml
 
@@ -58,7 +58,7 @@ _IMAGE_NAME: prepare_data
 _PROJECT_ID: pebolas-sandbox
 _SERVICE_REGION: southamerica-east1
 
-
+build logs on githbu: true
 Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
 
 ## kubeflow pipeline image
@@ -76,7 +76,7 @@ repository: GuidoLGM-sample-model
 
 branch: ^main$
 
-incluses files filter: images/kubeflow_pipeline_runner/Dockerfile
+incluses files filter: images/kubeflow_pipline/Dockerfile .cloudbuild/deploy-docker-image.yaml
 
 cloud ruild configuration file location: .cloudbuild/deploy-docker-image.yaml
 
@@ -85,7 +85,7 @@ _IMAGE_NAME: prepare_data
 _PROJECT_ID: pebolas-sandbox
 _SERVICE_REGION: southamerica-east1
 
-
+build logs on githbu: true
 Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
 # Workflow
 

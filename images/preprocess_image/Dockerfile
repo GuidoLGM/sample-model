@@ -1,11 +1,7 @@
 FROM python:3.11-slim
 
-
-
 RUN python3.11 -m pip install --upgrade pip setuptools wheel
 
-# Gcloud recomends to install de dependencies in the same image layer
-RUN python3.11 -m pip install --no-cache-dir \
-        google-cloud-bigquery==3.26.0 \
-        db-dtypes==1.3.0 \
-        pandas==2.2.3 \
+COPY requirements.txt /tmp/requirements.txt
+
+RUN python3.11 -m pip install --no-cache-dir -r /tmp/requirements.txt
