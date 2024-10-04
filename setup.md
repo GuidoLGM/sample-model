@@ -145,6 +145,34 @@ _PIPELINE_NAME: prepare_data
 
 Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
 
+## prepare data image
+
+name: build-model-image
+
+region: southamerica-east1
+
+description: build model image to store the model
+
+event: push to a branch
+
+source: 2nd gen
+
+repository: GuidoLGM-sample-model
+
+branch: ^main$
+
+incluses files filter: images/titanic_model/** .cloudbuild/deploy-docker-image.yaml
+
+cloud ruild configuration file location: .cloudbuild/deploy-docker-image.yaml
+
+_API_NAME: sample-model
+_IMAGE_NAME: prepare_data
+_PROJECT_ID: pebolas-sandbox
+_SERVICE_REGION: southamerica-east1
+
+build logs on githbu: true
+Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
+
 # Workflow
 
 workflow name: simple-model-lifecycle
