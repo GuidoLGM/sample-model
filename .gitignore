@@ -188,3 +188,5 @@ coco8/
 
 *.pt
 gcloud_credentials.json
+
+**/**_pipeline.json
