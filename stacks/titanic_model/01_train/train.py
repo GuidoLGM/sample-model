@@ -25,7 +25,7 @@ def fetch_arguments():
         help="Model file on google cloud storage",
         type=str,
         default=(
-            os.inviron["AIP_MODEL_DIR"]
+            os.environ["AIP_MODEL_DIR"]
             if "AIP_MODEL_DIR" in os.environ
             else ""
         ),

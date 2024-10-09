@@ -31,6 +31,16 @@ name: sample-model-kubeflow-pipeline
 region: southamerica-east1
 Object versioning: on
 
+
+
+# Bucket
+
+
+name: titanic-artifacts
+
+region: southamerica-east1
+Object versioning: on
+
 # setup on google cloud
 
 ## prepare data image
