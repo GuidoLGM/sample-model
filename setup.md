@@ -173,29 +173,6 @@ _SERVICE_REGION: southamerica-east1
 build logs on githbu: true
 Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
 
-# Workflow
-
-workflow name: simple-model-lifecycle
-
-region: southamerica-east1
-
-service account: Guido Owner
-
-call log level: errors only
-
-
-# workbench
-
-name: prepare-data-pipeline
-
-region: southamerica-east1
-
-zone: southamerica-each1-a
-
-machine type: e2-standard-2
-
-time of inactivity before shutdown: 30
-
 # pub/sub topic
 
 name: trigger-titanic-pipeline
@@ -217,3 +194,15 @@ target type: Pub/Sub
 topic: projects/pebolas-sandbox/topics/trigger-titanic-pipeline
 
 mesasge body: Trigging re prepare pipeline
+
+
+# endpoint
+
+name: test endpoint
+
+
+Model name: test_model (8712855593938845696)
+
+version: version 1
+
+machine type: n1-standard-2, 2 vCPUs, 7.5 GiB memory

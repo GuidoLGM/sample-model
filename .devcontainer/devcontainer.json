@@ -11,11 +11,16 @@
     // connected. This is typically a file mount in .devcontainer/docker-compose.yml
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     "features": {
-        "ghcr.io/devcontainers/features/github-cli:1": {}
+        "ghcr.io/devcontainers/features/github-cli:1": {},
+        "docker-in-docker": {}
     },
     "containerEnv": {
         "PYTHONPATH": "/workspaces/${localWorkspaceFolderBasename}/scr",
-        "GOOGLE_APPLICATION_CREDENTIALS": "/workspaces/${localWorkspaceFolderBasename}/gcloud_credentials.json"
+        "GOOGLE_APPLICATION_CREDENTIALS": "/workspaces/${localWorkspaceFolderBasename}/gcloud_credentials.json",
+        "AIP_HEALTH_ROUTE": "/health",
+        "API_PREDICT_ROUTE": "/predict",
+        "AIP_MODEL_URI": "gs://sample-model-kubeflow-pipeline/titanic-pipeline/470842673491/titanic-pipeline-20241004183710/train-model_-4230843777868103680/model",
+        "AIP_SCALER_URI": "gs://sample-model-kubeflow-pipeline/titanic-pipeline/470842673491/titanic-pipeline-20241003144804/scale-data_6946246072335335424/scaler_artifact"
     },
     "customizations": {
         "vscode": {
