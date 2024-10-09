@@ -68,8 +68,8 @@ def fetch_data(train_data_path: str, test_data_path: str) -> pd.DataFrame:
     logging.info(f"Fetching train data from {train_data_path}")
     logging.info(f"Fetching test data from {test_data_path}")
 
-    train = pd.read_csv(train_data_path, index=False)
-    test = pd.read_csv(test_data_path, index=False)
+    train = pd.read_csv(train_data_path, index_col=False)
+    test = pd.read_csv(test_data_path, index_col=False)
 
     logging.info(f"Data fetched successfully")
 
