@@ -1,0 +1,13 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', 
+            '-t', '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}', 
+            '-t', '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_IMAGE_NAME}:latest',
+            '--file', './stacks/${_IMAGE_NAME}/Dockerfile', './stacks/${_IMAGE_NAME}/'
+    ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_IMAGE_NAME}', '--all-tags']
+images:
+  - '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}'
+options:
+  logging: CLOUD_LOGGING_ONLY

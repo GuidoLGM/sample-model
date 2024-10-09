@@ -61,6 +61,35 @@ _SERVICE_REGION: southamerica-east1
 build logs on githbu: true
 Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
 
+
+## custom training image
+
+name: build-custom-train-image
+
+region: southamerica-east1
+
+description: build image for custom titanic training model
+
+event: push to a branch
+
+source: 2nd gen
+
+repository: GuidoLGM-sample-model
+
+branch: ^main$
+
+incluses files filter: stacks/titanic_model/01_train .cloudbuild/deploy-custom-pipeline-step.yaml
+
+cloud ruild configuration file location: .cloudbuild/deploy-custom-pipeline-step.yaml
+
+_API_NAME: sample-model
+_IMAGE_NAME: titanic_model/01_train
+_PROJECT_ID: pebolas-sandbox
+_SERVICE_REGION: southamerica-east1
+
+build logs on githbu: true
+Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
+
 ## kubeflow pipeline image
 name: update-kubeflow-pipeline-image
 
@@ -116,6 +145,7 @@ _PIPELINE_NAME: prepare_data
 
 build logs on githbu: true
 Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
+
 
 ## schedule prepare data pipeline
 
