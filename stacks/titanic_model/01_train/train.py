@@ -10,14 +10,35 @@ from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 
+"""
+To make hyperparamethers tuning you need to add the "cloudml-hypertune" package to the code and pass this parameters to argparse
+https://cloud.google.com/vertex-ai/docs/training/containers-overview
+"""
+
 
 def fetch_arguments():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "--data_gcs_path",
-        help="Dataset file on google cloud storage",
+        "--train_data_gcs",
+        help="Train dataset file on google cloud storage",
         type=str,
+        default=(
+            os.environ["AIP_TRAINING_DATA_URI"]
+            if "AIP_TRAINING_DATA_URI" in os.environ
+            else ""
+        ),
+    )
+
+    parser.add_argument(
+        "--test_data_gcs",
+        help="Test dataset file on google cloud storage",
+        type=str,
+        default=(
+            os.environ["AIP_TEST_DATA_URI"]
+            if "AIP_TEST_DATA_URI" in os.environ
+            else ""
+        ),
     )
 
     parser.add_argument(
@@ -42,27 +63,22 @@ def fetch_arguments():
     return args.__dict__
 
 
-def fetch_data(gcs_path: str) -> pd.DataFrame:
+def fetch_data(train_data_path: str, test_data_path: str) -> pd.DataFrame:
 
-    logging.info(f"Fetching data from {gcs_path}")
+    logging.info(f"Fetching train data from {train_data_path}")
+    logging.info(f"Fetching test data from {test_data_path}")
 
-    return pd.read_csv(gcs_path, index=False)
+    train = pd.read_csv(train_data_path, index=False)
+    test = pd.read_csv(test_data_path, index=False)
 
+    logging.info(f"Data fetched successfully")
 
-def train_test_split(df: pd.DataFrame):
-
-    X, y = df.drop("Survived", axis=1), df["Survived"]
-
-    logging.info(f"Splitting data into train and test sets")
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y,
-        test_size=0.2,
-        random_state=42,
+    return (
+        train.drop("Survived", axis=1),
+        train["Survived"],
+        test.drop("Survived", axis=1),
+        test["Survived"],
     )
-
-    return X_train, X_test, y_train, y_test
 
 
 def train_model(X_train, y_train, max_iter: int):
@@ -111,9 +127,9 @@ if __name__ == "__main__":
 
     arguments = fetch_arguments()
 
-    data = fetch_data(arguments["data_gcs_path"])
-
-    X_train, X_test, y_train, y_test = train_test_split(data)
+    X_train, X_test, y_train, y_test = train_test_split(
+        arguments["train_data_gcs"], arguments["test_data_gcs"]
+    )
 
     model = train_model(X_train, y_train, arguments["max_iter"])
 

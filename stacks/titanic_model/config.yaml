@@ -16,7 +16,8 @@ parameters:
   table_id: train_data
   output_table_id: train_cleaned
   dataset_display_name: titanic
-
+  train_image_uri: southamerica-east1-docker.pkg.dev/pebolas-sandbox/sample-model/titanic_model/01_train:latest
+  train_job_name: titanic-train
 
 packages:
   BIGQUERY: google-cloud-bigquery==3.26.0
