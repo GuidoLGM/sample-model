@@ -1,4 +1,5 @@
 import os
+import fsspec
 import joblib
 import logging
 import argparse
@@ -122,6 +123,7 @@ def save_model(model, gcs_path: str):
 
 if __name__ == "__main__":
 
+    fsspec.config.conf["open_expand"] = True
     logging.basicConfig(level=logging.INFO)
 
     arguments = fetch_arguments()
