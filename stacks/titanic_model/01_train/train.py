@@ -7,7 +7,6 @@ import pandas as pd
 from google.cloud import storage
 
 from sklearn.metrics import roc_auc_score
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 
 """
@@ -127,7 +126,7 @@ if __name__ == "__main__":
 
     arguments = fetch_arguments()
 
-    X_train, X_test, y_train, y_test = train_test_split(
+    X_train, X_test, y_train, y_test = fetch_data(
         arguments["train_data_gcs"], arguments["test_data_gcs"]
     )
 
