@@ -128,7 +128,7 @@ if __name__ == "__main__":
 
     arguments = fetch_arguments()
 
-    X_train, X_test, y_train, y_test = fetch_data(
+    X_train, y_train, X_test, y_test = fetch_data(
         arguments["train_data_gcs"], arguments["test_data_gcs"]
     )
 
