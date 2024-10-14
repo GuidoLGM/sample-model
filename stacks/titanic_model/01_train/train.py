@@ -8,12 +8,12 @@ import pandas as pd
 from google.cloud import storage
 from google.cloud import aiplatform
 from sklearn.linear_model import LogisticRegression
-from sklearn.base import accuracy_score
 from sklearn.metrics import (
     f1_score,
     precision_score,
     recall_score,
     roc_auc_score,
+    accuracy_score,
 )
 
 
