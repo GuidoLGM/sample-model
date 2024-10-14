@@ -31,12 +31,12 @@ def fetch_arguments():
     )
 
     parser.add_argument(
-        "--test_data_gcs",
-        help="Test dataset file on google cloud storage",
+        "--val_data_gcs",
+        help="Validation dataset file on google cloud storage",
         type=str,
         default=(
-            os.environ["AIP_TEST_DATA_URI"]
-            if "AIP_TEST_DATA_URI" in os.environ
+            os.environ["AIP_VALIDATION_DATA_URI"]
+            if "AIP_VALIDATION_DATA_URI" in os.environ
             else ""
         ),
     )
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     arguments = fetch_arguments()
 
     X_train, y_train, X_test, y_test = fetch_data(
-        arguments["train_data_gcs"], arguments["test_data_gcs"]
+        arguments["train_data_gcs"], arguments["val_data_gcs"]
     )
 
     model = train_model(X_train, y_train, arguments["max_iter"])

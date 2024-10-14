@@ -3,6 +3,7 @@ import pandas as pd
 import pickle as pkl
 from google.cloud import storage
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 
 
 app = FastAPI(title="Titanic Survival Prediction API")
@@ -25,6 +26,7 @@ blob.download_to_filename("model.pkl")
 scaler = pkl.load(open("scaler.pkl", "rb"))
 model = pkl.load(open("model.pkl", "rb"))
 
+
 @app.get("/health", status_code=200)
 async def health():
     return {"status": "healthy"}
@@ -44,7 +46,6 @@ async def predict(request: Request):
     data[column_to_scale] = scaler.fit_transform(data[column_to_scale])
 
     prediction = model.predict(data)
-
-    output["predictions"][0]["result"] = prediction.tolist()
-
-    return output
+    return JSONResponse(
+        content={"predictions": [{"result": prediction.tolist()}]}
+    )

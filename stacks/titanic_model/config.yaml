@@ -17,11 +17,14 @@ parameters:
   output_table_id: train_cleaned
   dataset_display_name: titanic
   train_image_uri: southamerica-east1-docker.pkg.dev/pebolas-sandbox/sample-model/titanic_model/01_train:latest
-  staging_bucket: gs://sample-model-kubeflow-pipeline//titanic-pipeline/staging
+  staging_bucket: gs://sample-model-kubeflow-pipeline/titanic-pipeline/staging
+  model_serving_container_image_uri: southamerica-east1-docker.pkg.dev/pebolas-sandbox/sample-model/deploy_model:latest
+  model_serving_container_health_route: /health
+  model_serving_container_predict_route: /predict
 
 packages:
   BIGQUERY: google-cloud-bigquery==3.26.0
   PANDAS: pandas==2.2.3
   DB_TYPES: db-dtypes==1.3.0
   SKLEARN: scikit-learn==1.5.2
-  AIPLATFORM: google-cloud-aiplatform==1.69.0
+  AIPLATFORM: google-cloud-aiplatform[pipelines]==1.69.0

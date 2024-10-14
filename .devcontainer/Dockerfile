@@ -11,6 +11,11 @@ RUN python3.11 -m pip install --no-cache-dir -r /tmp/requirements.txt
 COPY /images/prepare_data/requirements.txt /tmp/requirements.txt
 RUN python3.11 -m pip install --no-cache-dir -r /tmp/requirements.txt
 
+# model train dependencies
+COPY /stacks/titanic_model/01_train/requirements.txt /tmp/requirements.txt
+RUN python3.11 -m pip install --no-cache-dir -r /tmp/requirements.txt
+
+
 # model prediction dependencies
-COPY /stacks/deploy_model/requirements.txt /tmp/requirements.txt
+COPY /stacks/titanic_model/02_deploy/requirements.txt /tmp/requirements.txt
 RUN python3.11 -m pip install --no-cache-dir -r /tmp/requirements.txt
