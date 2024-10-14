@@ -141,6 +141,7 @@ def save_model(model, gcs_path: str):
 
 if __name__ == "__main__":
 
+    aiplatform.init(experiment="titanic")
     fsspec.core.DEFAULT_EXPAND = True
     logging.basicConfig(level=logging.INFO)
 
