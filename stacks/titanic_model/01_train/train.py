@@ -6,9 +6,16 @@ import argparse
 import pandas as pd
 
 from google.cloud import storage
-
-from sklearn.metrics import roc_auc_score
+from google.cloud import aiplatform
 from sklearn.linear_model import LogisticRegression
+from sklearn.base import accuracy_score
+from sklearn.metrics import (
+    f1_score,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+)
+
 
 """
 To make hyperparamethers tuning you need to add the "cloudml-hypertune" package to the code and pass this parameters to argparse
@@ -98,11 +105,22 @@ def evaluate_model(model, X_test, y_test):
 
     y_hat = model.predict(X_test)
 
+    accuracy = accuracy_score(y_test, y_hat)
+    precision = precision_score(y_test, y_hat, average="weighted")
+    recall = recall_score(y_test, y_hat, average="weighted")
+    f1 = f1_score(y_test, y_hat, average="weighted")
     auc = roc_auc_score(y_test, y_hat)
 
-    logging.info(f"Model AUC: {auc}")
-
-    return auc
+    # Log metrics using Vertex AI SDK
+    aiplatform.log_metrics(
+        {
+            "accuracy": accuracy,
+            "precision": precision,
+            "recall": recall,
+            "f1_score": f1,
+            "auc": auc,
+        }
+    )
 
 
 def save_model(model, gcs_path: str):
