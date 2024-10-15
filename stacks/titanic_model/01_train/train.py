@@ -141,13 +141,13 @@ def save_model(model, gcs_path: str):
 
 if __name__ == "__main__":
 
-    aiplatform.init("titanic")
+    aiplatform.init(experiment="titanic")
     fsspec.core.DEFAULT_EXPAND = True
     logging.basicConfig(level=logging.INFO)
 
     arguments = fetch_arguments()
 
-    aiplatform.start_run(run_name="train")
+    aiplatform.start_run("train")
 
     X_train, y_train, X_test, y_test = fetch_data(
         arguments["train_data_gcs"], arguments["val_data_gcs"]
