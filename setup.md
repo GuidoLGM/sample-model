@@ -88,12 +88,12 @@ repository: GuidoLGM-sample-model
 
 branch: ^main$
 
-incluses files filter: stacks/titanic_model/01_train .cloudbuild/deploy-custom-pipeline-step.yaml
+incluses files filter: stacks/titanic_model/train .cloudbuild/deploy-custom-pipeline-step.yaml
 
 cloud ruild configuration file location: .cloudbuild/deploy-custom-pipeline-step.yaml
 
 _API_NAME: sample-model
-_IMAGE_NAME: titanic_model/01_train
+_IMAGE_NAME: titanic_model/train
 _PROJECT_ID: pebolas-sandbox
 _SERVICE_REGION: southamerica-east1
 
@@ -116,12 +116,12 @@ repository: GuidoLGM-sample-model
 
 branch: ^main$
 
-incluses files filter: stacks/titanic_model/02_deploy .cloudbuild/deploy-custom-pipeline-step.yaml
+incluses files filter: stacks/titanic_model/deploy .cloudbuild/deploy-custom-pipeline-step.yaml
 
 cloud ruild configuration file location: .cloudbuild/deploy-custom-pipeline-step.yaml
 
 _API_NAME: sample-model
-_IMAGE_NAME: titanic_model/01_train
+_IMAGE_NAME: titanic_model/deploy
 _PROJECT_ID: pebolas-sandbox
 _SERVICE_REGION: southamerica-east1
 

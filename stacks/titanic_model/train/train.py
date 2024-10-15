@@ -111,16 +111,17 @@ def evaluate_model(model, X_test, y_test):
     f1 = f1_score(y_test, y_hat, average="weighted")
     auc = roc_auc_score(y_test, y_hat)
 
+    metrics = {
+        "accuracy": accuracy,
+        "precision": precision,
+        "recall": recall,
+        "f1_score": f1,
+        "auc": auc,
+    }
     # Log metrics using Vertex AI SDK
-    aiplatform.log_metrics(
-        {
-            "accuracy": accuracy,
-            "precision": precision,
-            "recall": recall,
-            "f1_score": f1,
-            "auc": auc,
-        }
-    )
+    aiplatform.log_metrics(metrics)
+
+    return metrics
 
 
 def save_model(model, gcs_path: str):
@@ -139,6 +140,21 @@ def save_model(model, gcs_path: str):
     logging.info(f"Model uploaded successfully")
 
 
+def save_metrics(metrics, gcs_path: str):
+    logging.info(f"Saving model locally")
+
+    local_dir = "metrics.joblib"
+
+    joblib.dump(metrics, local_dir)
+
+    logging.info(f"Uploading model to {gcs_path}")
+
+    storage_path = os.path.join(gcs_path, local_dir)
+    blob = storage.Blob.from_string(storage_path, client=storage.Client())
+    blob.upload_from_filename(local_dir)
+    logging.info(f"Metrics uploaded successfully")
+
+
 if __name__ == "__main__":
 
     aiplatform.init(experiment="titanic")
@@ -155,7 +171,8 @@ if __name__ == "__main__":
 
     model = train_model(X_train, y_train, arguments["max_iter"])
 
-    auc = evaluate_model(model, X_test, y_test)
+    metrics = evaluate_model(model, X_test, y_test)
 
     if arguments["model_gcs_path"] != "":
         save_model(model, arguments["model_gcs_path"])
+        save_metrics(metrics, arguments["model_gcs_path"])

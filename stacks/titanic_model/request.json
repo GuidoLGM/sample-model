@@ -1,0 +1,26 @@
+{
+    "instances": [
+        {
+            "PassangerId": 294,
+            "Pclass": 3,
+            "Sex": 1,
+            "Age": 24,
+            "SibSp": 0,
+            "Parch": 0,
+            "Fare": 8.85,
+            "Embarked_Q": false,
+            "Embarked_S": true
+        },
+        {
+            "PassangerId": 7,
+            "Pclass": 1,
+            "Sex": 0,
+            "Age": 54,
+            "SibSp": 0,
+            "Parch": 0,
+            "Fare": 51.8625,
+            "Embarked_Q": false,
+            "Embarked_S": true
+        }
+    ]
+}
