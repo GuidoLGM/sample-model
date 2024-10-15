@@ -147,6 +147,8 @@ if __name__ == "__main__":
 
     arguments = fetch_arguments()
 
+    aiplatform.start_run(run_name="train")
+
     X_train, y_train, X_test, y_test = fetch_data(
         arguments["train_data_gcs"], arguments["val_data_gcs"]
     )

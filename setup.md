@@ -274,3 +274,8 @@ Model name: test_model (8712855593938845696)
 version: version 1
 
 machine type: n1-standard-2, 2 vCPUs, 7.5 GiB memory
+
+
+# experiment
+
+name: titanic
