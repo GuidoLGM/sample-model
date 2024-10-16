@@ -1,12 +1,12 @@
 steps:
 
-  - name: '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_IMAGE_NAME}:latest'
+  - name: '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/kubeflow_pipeline:latest'
     entrypoint: bash
     args:
       - -c
       - |
-        jupyter nbconvert --execute --to notebook --inplace 'stacks/${_PIPELINE_NAME}/${_PIPELINE_NAME}.ipynb'
+        jupyter nbconvert --execute --to notebook --inplace 'stacks/${_PIPELINE_NAME}/pipeline.ipynb'
 images:
-  - '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/${_IMAGE_NAME}:latest'
+  - '${_SERVICE_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_API_NAME}/kubeflow_pipeline:latest'
 options:
   logging: CLOUD_LOGGING_ONLY

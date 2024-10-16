@@ -1,47 +1,21 @@
-# prepare data
-
-# dataset
-dataset name: titanic
-type: tabular/regression or classification
-region: us-central1
-source: select a table or view from bigquery
-BigQuery path: pebolas-sandbox.titanic.train_data
-
-# vertex AI  Training
-
-dataset: No managed dataset
-custom traing
-
-name: sample-model
-
-
-# Bucket
-
-
-name: sample-model-train-stack-files
-
-region: us-central1
-Object versioning: on
-
-# Bucket
-
-
-name: sample-model-kubeflow-pipeline
-
-region: us-central1
-Object versioning: on
-
-
-
-# Bucket
-
-
-name: titanic-artifacts
-
-region: us-central1
-Object versioning: on
 
 # setup on google cloud
+# repository
+
+name: sample-model
+format: docker
+region: us-central1
+
+# Bucket
+
+name: sample-model-kubeflow-pipeline
+multi-region: us
+
+
+# Bucket
+
+name: titanic-artifacts
+multi-region: us
 
 ## prepare data image
 
@@ -88,7 +62,7 @@ repository: GuidoLGM-sample-model
 
 branch: ^main$
 
-incluses files filter: stacks/titanic_model/train .cloudbuild/deploy-custom-pipeline-step.yaml
+incluses files filter: stacks/titanic_model/train/** .cloudbuild/deploy-custom-pipeline-step.yaml
 
 cloud ruild configuration file location: .cloudbuild/deploy-custom-pipeline-step.yaml
 
@@ -116,7 +90,7 @@ repository: GuidoLGM-sample-model
 
 branch: ^main$
 
-incluses files filter: stacks/titanic_model/deploy .cloudbuild/deploy-custom-pipeline-step.yaml
+incluses files filter: stacks/titanic_model/deploy/** .cloudbuild/deploy-custom-pipeline-step.yaml
 
 cloud ruild configuration file location: .cloudbuild/deploy-custom-pipeline-step.yaml
 
@@ -155,13 +129,13 @@ _SERVICE_REGION: us-central1
 build logs on githbu: true
 Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
 
-## run prepare data pipeline
+## run titanic pipeline
 
-name: run-prepare-data-pipeline
+name: run-titanic-pipeline
 
 region: us-central1
 
-description: Run the prepare data pipeline on vertex ai
+description: Run the titanic data pipeline on vertex ai
 
 event: push to a branch
 
@@ -171,15 +145,14 @@ repository: GuidoLGM-sample-model
 
 branch: ^main$
 
-incluses files filter: stacks/prepare_data/prepare_data.ipynb stacks/prepare_data/config.yaml .cloudbuild/run-kubeflow-notebook.yaml
+incluses files filter: stacks/titanic_model/pipeline.ipynb stacks/titanic_model/config.yaml .cloudbuild/run-kubeflow-notebook.yaml
 
 cloud ruild configuration file location: .cloudbuild/run-kubeflow-notebook.yaml
 
 _API_NAME: sample-model
-_IMAGE_NAME: kubeflow_pipeline
+_PIPELINE_NAME: titanic_model
 _PROJECT_ID: pebolas-sandbox
 _SERVICE_REGION: us-central1
-_PIPELINE_NAME: prepare_data
 
 build logs on githbu: true
 Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
@@ -213,34 +186,6 @@ _PIPELINE_NAME: prepare_data
 
 Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
 
-## prepare data image
-
-name: build-model-image
-
-region: us-central1
-
-description: build model image to store the model
-
-event: push to a branch
-
-source: 2nd gen
-
-repository: GuidoLGM-sample-model
-
-branch: ^main$
-
-incluses files filter: images/titanic_model/** .cloudbuild/deploy-docker-image.yaml
-
-cloud ruild configuration file location: .cloudbuild/deploy-docker-image.yaml
-
-_API_NAME: sample-model
-_IMAGE_NAME: prepare_data
-_PROJECT_ID: pebolas-sandbox
-_SERVICE_REGION: us-central1
-
-build logs on githbu: true
-Service account: ci-cd-service-account@pebolas-sandbox.iam.gserviceaccount.com
-
 # pub/sub topic
 
 name: trigger-titanic-pipeline
@@ -262,18 +207,6 @@ target type: Pub/Sub
 topic: projects/pebolas-sandbox/topics/trigger-titanic-pipeline
 
 mesasge body: Trigging re prepare pipeline
-
-
-# endpoint
-
-name: test endpoint
-
-
-Model name: test_model (8712855593938845696)
-
-version: version 1
-
-machine type: n1-standard-2, 2 vCPUs, 7.5 GiB memory
 
 
 # experiment
