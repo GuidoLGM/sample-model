@@ -3,6 +3,7 @@ import fsspec
 import joblib
 import logging
 import argparse
+import datetime
 import pandas as pd
 
 from google.cloud import storage
@@ -163,7 +164,8 @@ if __name__ == "__main__":
 
     arguments = fetch_arguments()
 
-    aiplatform.start_run("train")
+    curr_time = datetime.datetime.now().strftime("%Y%m%d%H%M")
+    aiplatform.start_run(curr_time)
 
     X_train, y_train, X_test, y_test = fetch_data(
         arguments["train_data_gcs"], arguments["val_data_gcs"]
