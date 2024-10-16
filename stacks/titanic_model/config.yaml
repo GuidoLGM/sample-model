@@ -19,8 +19,8 @@ parameters:
   train_image_uri: southamerica-east1-docker.pkg.dev/pebolas-sandbox/sample-model/titanic_model/01_train:latest
   staging_bucket: gs://sample-model-kubeflow-pipeline/titanic-pipeline/staging
   model_serving_container_image_uri: southamerica-east1-docker.pkg.dev/pebolas-sandbox/sample-model/deploy_model:latest
-  model_serving_container_health_route: /health
-  model_serving_container_predict_route: /predict
+  train_model_name: titanic_model
+  train_job_name: titanic_train_job
 
 packages:
   BIGQUERY: google-cloud-bigquery==3.26.0
