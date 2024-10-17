@@ -15,14 +15,14 @@ def fetch_arguments():
         "--model_gcs_path",
         help="google cloud storage path to the model",
         type=str,
-        default="",
+        default="gs://sample-model-kubeflow-pipeline/titanic-pipeline/staging/aiplatform-custom-training-2024-10-17-16:48:37.930/model/model.joblib",
     )
 
     parser.add_argument(
         "--scaler_gcs_path",
         help="google cloud storage path to the scaler",
         type=str,
-        default="",
+        default="gs://sample-model-kubeflow-pipeline/titanic-pipeline/470842673491/titanic-pipeline-20241017155349/prepare-data_5317290390007578624/scaler_artifact",
     )
 
     args = parser.parse_args()
@@ -31,8 +31,9 @@ def fetch_arguments():
 
 def fetch_gcs_file(gcs_path: str, file_name: str):
     storage_client = storage.Client()
-    bucket = storage_client.get_bucket(gcs_path)
-    blob = bucket.blob(file_name)
+    bucket_name = gcs_path.split("/")[2]
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob("/".join(gcs_path.split("/")[3:]))
     blob.download_to_filename(file_name)
     return joblib.load(file_name)
 
@@ -61,4 +62,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0", port=os.environ["AIP_HTTP_PORT"])
