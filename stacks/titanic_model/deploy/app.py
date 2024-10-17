@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, Response
+import pandas as pd
 import argparse
 import joblib
 import os
@@ -44,8 +45,10 @@ def health_check():
 def predict():
     request_json = request.json
     request_instances = request_json["instances"]
-    scale_data = scaler.transform(request_instances)
-    prediction = model.predict(scale_data)
+    batch = pd.DataFrame(request_instances)
+    columns_to_scale = ["Age", "Fare"]
+    batch[columns_to_scale] = scaler.transform(batch[columns_to_scale])
+    prediction = model.predict(batch)
     output = {"predictions": [{"result": prediction.tolist()}]}
     return jsonify(output)
 
