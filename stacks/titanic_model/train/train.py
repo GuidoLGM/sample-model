@@ -171,8 +171,6 @@ if __name__ == "__main__":
         arguments["train_data_gcs"], arguments["val_data_gcs"]
     )
 
-    logging.info(f"Train data head: {X_train.head()}")
-    logging.info(f"Train target head: {y_train.head()}")
     model = train_model(X_train, y_train, arguments["max_iter"])
 
     metrics = evaluate_model(model, X_test, y_test)
