@@ -18,6 +18,13 @@ def fetch_arguments():
         default="",
     )
 
+    parser.add_argument(
+        "--scaler_gcs_path",
+        help="google cloud storage path to the scaler",
+        type=str,
+        default="",
+    )
+
     args = parser.parse_args()
     return args.__dict__
 
@@ -33,7 +40,7 @@ def fetch_gcs_file(gcs_path: str, file_name: str):
 args = fetch_arguments()
 
 model = fetch_gcs_file(args["model_gcs_path"], "model.joblib")
-scaler = fetch_gcs_file(args["model_gcs_path"], "scaler.joblib")
+scaler = fetch_gcs_file(args["scaler_gcs_path"], "scaler.joblib")
 
 
 @app.route(os.environ["AIP_HEALTH_ROUTE"], methods=["GET"])
