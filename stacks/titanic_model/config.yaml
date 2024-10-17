@@ -18,7 +18,7 @@ parameters:
   dataset_display_name: titanic
   train_image_uri: us-central1-docker.pkg.dev/pebolas-sandbox/sample-model/titanic_model/train:latest
   staging_bucket: gs://sample-model-kubeflow-pipeline/titanic-pipeline/staging
-  model_serving_container_image_uri: us-central1-docker.pkg.dev/pebolas-sandbox/sample-model/titanic_model/train:latest
+  model_serving_container_image_uri: us-central1-docker.pkg.dev/pebolas-sandbox/sample-model/titanic_model/deploy:latest
   train_model_name: titanic_model
   train_job_name: titanic_train_job
 
