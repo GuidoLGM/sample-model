@@ -15,14 +15,14 @@ def fetch_arguments():
         "--model_gcs_path",
         help="google cloud storage path to the model",
         type=str,
-        default="gs://sample-model-kubeflow-pipeline/titanic-pipeline/staging/aiplatform-custom-training-2024-10-17-16:48:37.930/model/model.joblib",
+        default="gs://sample-model-kubeflow-pipeline/titanic-pipeline/staging/aiplatform-custom-training-2024-10-17-20:39:01.630/model/model.joblib",
     )
 
     parser.add_argument(
         "--scaler_gcs_path",
         help="google cloud storage path to the scaler",
         type=str,
-        default="gs://sample-model-kubeflow-pipeline/titanic-pipeline/470842673491/titanic-pipeline-20241017155349/prepare-data_5317290390007578624/scaler_artifact",
+        default="gs://sample-model-kubeflow-pipeline/titanic-pipeline/470842673491/titanic-pipeline-20241017203224/prepare-data_8796285917779197952/dataset_artifact",
     )
 
     args = parser.parse_args()
