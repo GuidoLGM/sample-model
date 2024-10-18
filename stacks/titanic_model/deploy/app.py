@@ -53,11 +53,14 @@ def health_check():
 def predict():
     request_json = request.json
     request_instances = request_json["instances"]
-    batch = pd.DataFrame(request_instances)
-    columns_to_scale = ["Age", "Fare"]
-    batch[columns_to_scale] = scaler.transform(batch[columns_to_scale])
-    prediction = model.predict(batch)
-    output = {"predictions": [{"result": prediction.tolist()}]}
+    try:
+        batch = pd.DataFrame(request_instances)
+        columns_to_scale = ["Age", "Fare"]
+        batch[columns_to_scale] = scaler.transform(batch[columns_to_scale])
+        prediction = model.predict(batch)
+        output = {"predictions": [{"result": prediction.tolist()}]}
+    except Exception as e:
+        output = {"error": str(e)}
     return jsonify(output)
 
 

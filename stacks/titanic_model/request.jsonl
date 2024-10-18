@@ -1,0 +1,48 @@
+{
+    "instances": [
+        {
+            "Sex": 0,
+            "Age": 0.48488031056184394,
+            "SibSp": 0,
+            "Parch": 0,
+            "Fare": 0.1594826698227305,
+            "Embarked_Q": false,
+            "Embarked_S": false,
+            "Pclass_2": false,
+            "Pclass_3": false
+        },
+        {
+            "Sex": 0,
+            "Age": -0.592480599802893,
+            "SibSp": 0,
+            "Parch": 0,
+            "Fare": -0.5049620073345154,
+            "Embarked_Q": false,
+            "Embarked_S": true,
+            "Pclass_2": false,
+            "Pclass_3": true
+        },
+        {
+            "Sex": 0,
+            "Age": 0.6387890120425207,
+            "SibSp": 0,
+            "Parch": 0,
+            "Fare": -0.506472108873509,
+            "Embarked_Q": false,
+            "Embarked_S": true,
+            "Pclass_2": false,
+            "Pclass_3": true
+        },
+        {
+            "Sex": 0,
+            "Age": -2.2085219653499983,
+            "SibSp": 5,
+            "Parch": 2,
+            "Fare": 0.2958951755118317,
+            "Embarked_Q": false,
+            "Embarked_S": true,
+            "Pclass_2": false,
+            "Pclass_3": true
+        }
+    ]
+}
