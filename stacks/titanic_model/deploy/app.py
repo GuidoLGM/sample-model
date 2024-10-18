@@ -51,9 +51,9 @@ def health_check():
 
 @app.route(os.environ["AIP_PREDICT_ROUTE"], methods=["POST"])
 def predict():
-    request_json = request.json
-    request_instances = request_json["instances"]
     try:
+        request_json = request.json
+        request_instances = request_json["instances"]
         batch = pd.DataFrame(request_instances)
         columns_to_scale = ["Age", "Fare"]
         batch[columns_to_scale] = scaler.transform(batch[columns_to_scale])
