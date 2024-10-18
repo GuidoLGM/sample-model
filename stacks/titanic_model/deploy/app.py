@@ -38,12 +38,6 @@ def fetch_gcs_file(gcs_path: str, file_name: str):
     return joblib.load(file_name)
 
 
-args = fetch_arguments()
-
-model = fetch_gcs_file(args["model_gcs_path"], "model.joblib")
-scaler = fetch_gcs_file(args["scaler_gcs_path"], "scaler.joblib")
-
-
 @app.route(os.environ["AIP_HEALTH_ROUTE"], methods=["GET"])
 def health_check():
     return {"status": "healthy"}
@@ -52,6 +46,10 @@ def health_check():
 @app.route(os.environ["AIP_PREDICT_ROUTE"], methods=["POST"])
 def predict():
     try:
+        args = fetch_arguments()
+
+        model = fetch_gcs_file(args["model_gcs_path"], "model.joblib")
+        scaler = fetch_gcs_file(args["scaler_gcs_path"], "scaler.joblib")
         request_json = request.json
         request_instances = request_json["instances"]
         batch = pd.DataFrame(request_instances)
