@@ -22,7 +22,7 @@ def fetch_arguments():
         "--scaler_gcs_path",
         help="google cloud storage path to the scaler",
         type=str,
-        default="gs://sample-model-kubeflow-pipeline/titanic-pipeline/470842673491/titanic-pipeline-20241017203224/prepare-data_8796285917779197952/dataset_artifact",
+        default="gs://sample-model-kubeflow-pipeline/titanic-pipeline/470842673491/titanic-pipeline-20241017203224/prepare-data_8796285917779197952/scaler_artifact",
     )
 
     args = parser.parse_args()
@@ -38,6 +38,12 @@ def fetch_gcs_file(gcs_path: str, file_name: str):
     return joblib.load(file_name)
 
 
+args = fetch_arguments()
+
+model = fetch_gcs_file(args["model_gcs_path"], "model.joblib")
+scaler = fetch_gcs_file(args["scaler_gcs_path"], "scaler.joblib")
+
+
 @app.route(os.environ["AIP_HEALTH_ROUTE"], methods=["GET"])
 def health_check():
     return {"status": "healthy"}
@@ -45,20 +51,17 @@ def health_check():
 
 @app.route(os.environ["AIP_PREDICT_ROUTE"], methods=["POST"])
 def predict():
-    try:
-        args = fetch_arguments()
+    request_json = request.json
+    request_instances = request_json["instances"]
+    batch = pd.DataFrame(request_instances)
 
-        model = fetch_gcs_file(args["model_gcs_path"], "model.joblib")
-        scaler = fetch_gcs_file(args["scaler_gcs_path"], "scaler.joblib")
-        request_json = request.json
-        request_instances = request_json["instances"]
-        batch = pd.DataFrame(request_instances)
-        columns_to_scale = ["Age", "Fare"]
-        batch[columns_to_scale] = scaler.transform(batch[columns_to_scale])
-        prediction = model.predict(batch)
-        output = {"predictions": [{"result": prediction.tolist()}]}
-    except Exception as e:
-        output = {"error": str(e)}
+    columns_to_scale = ["Age", "Fare"]
+    batch[columns_to_scale] = scaler.transform(batch[columns_to_scale])
+
+    prediction = model.predict(batch)
+
+    output = {"predictions": [{"result": prediction.tolist()}]}
+
     return jsonify(output)
 
 
